@@ -7,7 +7,7 @@ from dash import html
 
 body = dbc.Container([
     html.Div([
-        html.H2('Home')
+        html.H2('District 2')
     ],
     className='row'
     ),

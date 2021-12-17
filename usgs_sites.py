@@ -1,0 +1,1 @@
+USGS_06710247 = 'https://waterservices.usgs.gov/nwis/iv/?sites=06710247&parameterCd=00060&startDT=2021-12-09T21:50:06.465-07:00&endDT=2021-12-16T21:50:06.465-07:00&siteStatus=all&f'
