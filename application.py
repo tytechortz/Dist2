@@ -82,6 +82,15 @@ def get_dist2_data(n):
 def get_usgs_data_outlet(data):
     ew = pd.read_json(data)
     print(ew)
+    print(type(ew))
+
+    return html.Div([
+        html.Div([
+            html.H6('Englewood Discharge = {}'.format(ew.iloc[-1,-1]))
+        ],
+            className='row'
+        ),
+    ])
 
 if __name__ == '__main__':
     app.run_server(debug=True)
