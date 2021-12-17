@@ -80,9 +80,11 @@ def get_dist2_data(n):
 
 @app.callback(
     Output('usgs-data-layout', 'children'),
-    Input('ew-data-raw', 'data'))
-def get_usgs_data_outlet(data):
-    ew = pd.read_json(data)
+    [Input('ew-data-raw', 'data'),
+    Input('un-data-raw', 'data')])
+def get_usgs_data_outlet(ew_data, un_data):
+    ew = pd.read_json(ew_data)
+    un = pd.read_json(un_data)
     # print(ew)
     
     
@@ -95,6 +97,11 @@ def get_usgs_data_outlet(data):
         ),
         html.Div([
             html.H6('Englewood Discharge = {} at {}'.format(ew.iloc[-1,-1], ew.datetime.iloc[-1]))
+        ],
+            className='row'
+        ),
+        html.Div([
+            html.H6('Union Discharge = {} at {}'.format(un.iloc[-1,-1], un.datetime.iloc[-1]))
         ],
             className='row'
         ),
