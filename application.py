@@ -86,6 +86,11 @@ def get_usgs_data_outlet(data):
 
     return html.Div([
         html.Div([
+            html.H2('USGS Stations')
+        ],
+            className='row'
+        ),
+        html.Div([
             html.H6('Englewood Discharge = {}'.format(ew.iloc[-1,-1]))
         ],
             className='row'
