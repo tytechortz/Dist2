@@ -3,6 +3,7 @@ from dash import dcc
 from dash import html
 from dash.dependencies import Input, Output, State
 from homepage import Homepage
+from dist2 import dist2_App
 
 app = dash.Dash(name=__name__, 
                 title="Environmental Data Dashboard",
@@ -21,8 +22,8 @@ app.layout = html.Div([
 @app.callback(Output('page-content', 'children'),
             [Input('url', 'pathname')])
 def display_page(pathname):
-    if pathname == '/stuff':
-        return dt_App()
+    if pathname == '/dist2':
+        return dist2_App()
     else:
         return Homepage()
 

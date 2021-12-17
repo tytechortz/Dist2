@@ -11,6 +11,7 @@ body = dbc.Container([
     ],
     className='row'
     ),
+    dbc.Button("Open App", color="primary", href="/dist2"),
 ])
 
 def Homepage():
