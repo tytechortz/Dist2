@@ -41,31 +41,47 @@ def display_page(pathname):
 
 # url = 'https://waterservices.usgs.gov/nwis/iv/?format=json&sites=01646500&parameterCd=00060,00065&siteStatus=all'
 
-url = 'https://waterservices.usgs.gov/nwis/iv/?format=rdb&indent=on&sites=06711565&parameterCd=00060&siteStatus=all'
+englewood_url = 'https://waterservices.usgs.gov/nwis/iv/?format=rdb&indent=on&sites=06711565&parameterCd=00060&siteStatus=all'
 
-# url = 'https://waterservices.usgs.gov/nwis/iv/?sites=06710247&parameterCd=00060&startDT=2021-12-16T05:20:25.901-07:00&endDT=2021-12-17T05:20:25.901-07:00&siteStatus=all&format=rdb'
+union_url = 'https://waterservices.usgs.gov/nwis/iv/?format=rdb&indent=on&sites=06710247&parameterCd=00060&siteStatus=all'
+
+
 
 
 
 @app.callback(
-    Output('usgs-data-raw', 'data'),
+    [Output('ew-data-raw', 'data'),
+    Output('un-data-raw', 'data')],
     Input('interval-component', 'n_intervals'))
 def get_dist2_data(n):
     pd.set_option('display.max_columns', None)
 
     print(n)
     print('SUP')
-    df = pd.read_csv(url, sep='\t', comment='#')
-    # usgs_data_raw = pd.read_csv(USGS_06710247)
-    # print(df)
-    df = df.set_index('datetime')
-    print(df)
-    discharge = df.iloc[-1,3]
-    print(discharge)
+    ew = pd.read_csv(englewood_url, sep='\t', comment='#')
+    un = pd.read_csv(union_url, sep='\t', comment='#')
     
-    return df.to_json()
+    ew.drop(ew.columns[[1,3,-1]], axis=1, inplace=True)
+    un.drop(un.columns[[1,3,-1]], axis=1, inplace=True)
+    ew = ew.set_index('datetime')
+    un = un.set_index('datetime')
+    # print(ew)
+    # print(un)
+    
+    # englewood = ew.iloc[-1,[2,1]]
+    # union = un.iloc[-1,[2,1]]
+    # print(englewood)
+    # print(union)
+    
+    return ew.to_json(), un.to_json()
 
 
+@app.callback(
+    Output('usgs-data-layout', 'children'),
+    Input('ew-data-raw', 'data'))
+def get_usgs_data_outlet(data):
+    ew = pd.read_json(data)
+    print(ew)
 
 if __name__ == '__main__':
     app.run_server(debug=True)

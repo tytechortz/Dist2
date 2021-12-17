@@ -58,8 +58,9 @@ def dist2_App():
     return html.Div([
         get_nav_bar(),
         get_emptyrow(),
-        # html.Div(id='usgs-data-layout'),
-        dcc.Store(id='usgs-data-raw')
+        html.Div(id='usgs-data-layout'),
+        dcc.Store(id='ew-data-raw'),
+        dcc.Store(id='un-data-raw')
     ])
 
 app.layout = dist2_App
