@@ -62,10 +62,12 @@ def get_dist2_data(n):
     un = pd.read_csv(union_url, sep='\t', comment='#')
     
     ew.drop(ew.columns[[1,3,-1]], axis=1, inplace=True)
+    ew = ew[1:]
     un.drop(un.columns[[1,3,-1]], axis=1, inplace=True)
-    ew = ew.set_index('datetime')
-    un = un.set_index('datetime')
-    # print(ew)
+    un = un[1:]
+    # ew = ew.set_index('datetime')
+    # un = un.set_index('datetime')
+    print(ew)
     # print(un)
     
     # englewood = ew.iloc[-1,[2,1]]
@@ -81,8 +83,9 @@ def get_dist2_data(n):
     Input('ew-data-raw', 'data'))
 def get_usgs_data_outlet(data):
     ew = pd.read_json(data)
-    print(ew)
-    print(type(ew))
+    # print(ew)
+    
+    
 
     return html.Div([
         html.Div([
@@ -91,7 +94,7 @@ def get_usgs_data_outlet(data):
             className='row'
         ),
         html.Div([
-            html.H6('Englewood Discharge = {}'.format(ew.iloc[-1,-1]))
+            html.H6('Englewood Discharge = {} at {}'.format(ew.iloc[-1,-1], ew.datetime.iloc[-1]))
         ],
             className='row'
         ),
