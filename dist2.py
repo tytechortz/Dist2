@@ -60,7 +60,9 @@ def dist2_App():
         get_emptyrow(),
         html.Div(id='usgs-data-layout'),
         dcc.Store(id='ew-data-raw'),
-        dcc.Store(id='un-data-raw')
+        dcc.Store(id='un-data-raw'),
+        dcc.Store(id='cc-data-raw'),
+        dcc.Store(id='fl-data-raw')
     ])
 
 app.layout = dist2_App

@@ -45,13 +45,21 @@ englewood_url = 'https://waterservices.usgs.gov/nwis/iv/?format=rdb&indent=on&si
 
 union_url = 'https://waterservices.usgs.gov/nwis/iv/?format=rdb&indent=on&sites=06710247&parameterCd=00060&siteStatus=all'
 
+comm_city_url = 'https://waterservices.usgs.gov/nwis/iv/?format=rdb&indent=on&sites=06714215&parameterCd=00060&siteStatus=all'
+
+ft_lupton_url = 'https://waterservices.usgs.gov/nwis/iv/?format=rdb&indent=on&sites=06721000&parameterCd=00060&siteStatus=all'
+
+d2_url = 'https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrystation/?format=csv&dateFormat=spaceSepToSeconds&fields=stationName%2CmeasDateTime%2CmeasValue&waterDistrict=2'
+
 
 
 
 
 @app.callback(
     [Output('ew-data-raw', 'data'),
-    Output('un-data-raw', 'data')],
+    Output('un-data-raw', 'data'),
+    Output('cc-data-raw', 'data'),
+    Output('fl-data-raw', 'data'),],
     Input('interval-component', 'n_intervals'))
 def get_dist2_data(n):
     pd.set_option('display.max_columns', None)
@@ -60,11 +68,26 @@ def get_dist2_data(n):
     print('SUP')
     ew = pd.read_csv(englewood_url, sep='\t', comment='#')
     un = pd.read_csv(union_url, sep='\t', comment='#')
+    cc = pd.read_csv(comm_city_url, sep='\t', comment='#')
+    fl = pd.read_csv(ft_lupton_url, sep='\t', comment='#')
+    d2 = pd.read_csv(d2_url, skiprows=[1])
+    d2_header = d2.iloc[0]
+    d2 = d2[1:]
+    d2.columns = d2_header
+    # d2 = d2.drop(d2.columns[[3]], axis=1)
+    print(d2.columns)
+    print(d2)
+    d2.drop([nan])
+
     
     ew.drop(ew.columns[[1,3,-1]], axis=1, inplace=True)
     ew = ew[1:]
     un.drop(un.columns[[1,3,-1]], axis=1, inplace=True)
     un = un[1:]
+    cc.drop(cc.columns[[1,3,-1]], axis=1, inplace=True)
+    cc = cc[1:]
+    fl.drop(fl.columns[[1,3,-1]], axis=1, inplace=True)
+    fl = fl[1:]
     # ew = ew.set_index('datetime')
     # un = un.set_index('datetime')
     print(ew)
@@ -75,16 +98,20 @@ def get_dist2_data(n):
     # print(englewood)
     # print(union)
     
-    return ew.to_json(), un.to_json()
+    return ew.to_json(), un.to_json(), cc.to_json(), fl.to_json()
 
 
 @app.callback(
     Output('usgs-data-layout', 'children'),
     [Input('ew-data-raw', 'data'),
-    Input('un-data-raw', 'data')])
-def get_usgs_data_outlet(ew_data, un_data):
+    Input('un-data-raw', 'data'),
+    Input('cc-data-raw', 'data'),
+    Input('fl-data-raw', 'data'),])
+def get_usgs_data_outlet(ew_data, un_data, cc_data, fl_data):
     ew = pd.read_json(ew_data)
     un = pd.read_json(un_data)
+    cc = pd.read_json(cc_data)
+    fl = pd.read_json(fl_data)
     # print(ew)
     
     
@@ -96,12 +123,22 @@ def get_usgs_data_outlet(ew_data, un_data):
             className='row'
         ),
         html.Div([
-            html.H6('Englewood Discharge = {} at {}'.format(ew.iloc[-1,-1], ew.datetime.iloc[-1]))
+            html.H6('Englewood Discharge = {} - {}'.format(ew.iloc[-1,-1], ew.datetime.iloc[-1]))
         ],
             className='row'
         ),
         html.Div([
-            html.H6('Union Discharge = {} at {}'.format(un.iloc[-1,-1], un.datetime.iloc[-1]))
+            html.H6('Union Discharge = {} - {}'.format(un.iloc[-1,-1], un.datetime.iloc[-1]))
+        ],
+            className='row'
+        ),
+        html.Div([
+            html.H6('Commerce City Discharge = {} - {}'.format(cc.iloc[-1,-1], cc.datetime.iloc[-1]))
+        ],
+            className='row'
+        ),
+        html.Div([
+            html.H6('Ft. Lupton Discharge = {} - {}'.format(fl.iloc[-1,-1], fl.datetime.iloc[-1]))
         ],
             className='row'
         ),
