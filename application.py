@@ -59,10 +59,12 @@ d2_url = 'https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrysta
     [Output('ew-data-raw', 'data'),
     Output('un-data-raw', 'data'),
     Output('cc-data-raw', 'data'),
-    Output('fl-data-raw', 'data'),],
+    Output('fl-data-raw', 'data'),
+    Output('d2-data-raw', 'data'),],
     Input('interval-component', 'n_intervals'))
 def get_dist2_data(n):
     pd.set_option('display.max_columns', None)
+    pd.set_option('display.max_rows', None)
 
     print(n)
     print('SUP')
@@ -75,9 +77,9 @@ def get_dist2_data(n):
     d2 = d2[1:]
     d2.columns = d2_header
     # d2 = d2.drop(d2.columns[[3]], axis=1)
-    print(d2.columns)
-    print(d2)
-    d2.drop([nan])
+    # print(d2.columns)
+    # print(d2)
+   
 
     
     ew.drop(ew.columns[[1,3,-1]], axis=1, inplace=True)
@@ -90,7 +92,7 @@ def get_dist2_data(n):
     fl = fl[1:]
     # ew = ew.set_index('datetime')
     # un = un.set_index('datetime')
-    print(ew)
+    # print(ew)
     # print(un)
     
     # englewood = ew.iloc[-1,[2,1]]
@@ -98,7 +100,7 @@ def get_dist2_data(n):
     # print(englewood)
     # print(union)
     
-    return ew.to_json(), un.to_json(), cc.to_json(), fl.to_json()
+    return ew.to_json(), un.to_json(), cc.to_json(), fl.to_json(), d2.to_json()
 
 
 @app.callback(
@@ -142,6 +144,25 @@ def get_usgs_data_outlet(ew_data, un_data, cc_data, fl_data):
         ],
             className='row'
         ),
+    ])
+
+@app.callback(
+    Output('d2-data-layout', 'children'),
+    [Input('d2-data-raw', 'data')])
+def get_usgs_data_outlet(d2_data):
+    d2 = pd.read_json(d2_data)
+    
+    print(d2)
+    
+    
+
+    return html.Div([
+        html.Div([
+            html.H2('District 2')
+        ],
+            className='row'
+        ),
+       
     ])
 
 if __name__ == '__main__':
