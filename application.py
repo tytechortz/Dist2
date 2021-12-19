@@ -120,7 +120,7 @@ def get_usgs_data_outlet(ew_data, un_data, cc_data, fl_data):
 
     return html.Div([
         html.Div([
-            html.H2('USGS Stations')
+            html.H4('USGS Stations')
         ],
             className='row'
         ),
@@ -153,16 +153,76 @@ def get_usgs_data_outlet(d2_data):
     d2 = pd.read_json(d2_data)
     
     print(d2)
+    burlington = d2.loc[d2['stationName'] == 'BURLINGTON-WELLINGTON CANAL']
+    gardener = d2.loc[d2['stationName'] == 'GARDENER DITCH TO CHEROKEE POWER PLANT']
+
+    print(burlington)
     
     
 
     return html.Div([
         html.Div([
-            html.H2('District 2')
+            html.H5('District 2')
         ],
             className='row'
         ),
-       
+        html.Div([
+            html.Div([
+                html.H6('DIVERSION', style={'text-align':'center', 'color':'white'})
+            ],
+                className='three columns'
+            ),
+            html.Div([
+                html.H6('CFS', style={'text-align':'center', 'color':'white'})
+            ],
+                className='one column'
+            ),
+            html.Div([
+                html.H6('TIME', style={'text-align':'center', 'color':'white'})
+            ],
+                className='two columns'
+            ),
+        ],
+            className='row'
+        ),
+        html.Div([
+            html.Div([
+                html.H6('BURLINGTON-WELLINGTON')
+            ],
+                className='three columns'
+            ),
+            html.Div([
+                html.H6('{}'.format(burlington.measValue.values[0]), style={'text-align':'center'})
+            ],
+                className='one column'
+            ),
+            html.Div([
+                html.H6('{}'.format(burlington.measDateTime.values[0]), style={'text-align':'center'})
+            ],
+                className='two columns'
+            ),
+        ],
+            className='row'
+        ),
+        html.Div([
+            html.Div([
+                html.H6('GARDENER DITCH TO CHEROKEE POWER PLANT')
+            ],
+                className='three columns'
+            ),
+            html.Div([
+                html.H6('{}'.format(gardener.measValue.values[0]), style={'text-align':'center'})
+            ],
+                className='one column'
+            ),
+            html.Div([
+                html.H6('{}'.format( gardener.measDateTime.values[0]), style={'text-align':'center'})
+            ],
+                className='two columns'
+            ),
+        ],
+            className='row'
+        ),
     ])
 
 if __name__ == '__main__':
